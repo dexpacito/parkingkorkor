@@ -78,9 +78,9 @@ body {
     width: 100%;
   }
 }
-.box-form .right h5 {
-  font-size: 6vmax;
-  line-height: 0;
+.box-form .right h2 {
+  font-size: 4vmax;
+  line-height: 1;
 }
 .box-form .right p {
   font-size: 14px;
