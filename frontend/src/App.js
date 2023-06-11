@@ -1,21 +1,27 @@
 import './App.css';
+import { BrowserRouter as Router, Route, Link, Switch } from 'react-router-dom';
+import LoginPage from './pages/loginpage';
 
 function App() {
   return (
-    <div className="App">
-      <div className="menuBar">
-        <div className="leftContent">
-          <h1>parkingkorkor Menu Bar WIP!</h1>
+    <Router>
+      <div className="App">
+        <div className="menuBar">
+          <div className="leftContent">
+            <h1>parkingkorkor Menu Bar WIP!</h1>
+          </div>
+          <div className="rightContent">
+            <Link to="pages/loginpage">Log In</Link>
+            <button>Sign Up</button>
+          </div>
         </div>
-        <div className="rightContent">
-          <button>Log In</button>
-          <button>Sign Up</button>
-        </div>
+        <Switch>
+          <Route path="./pages/login">
+            <LoginPage />
+          </Route>
+        </Switch>
       </div>
-      <header className="App-header">
-        <p>Hello World!</p>
-      </header>
-    </div>
+    </Router>
   );
 }
 
