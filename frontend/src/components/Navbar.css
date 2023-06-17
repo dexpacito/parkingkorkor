@@ -150,9 +150,9 @@
     text-decoration: none;
     font-size: 1.5rem;
     background-color: transparent;
-    color: #fff;
+    color: #0869d9;
     padding: 14px 20px;
-    border: 1px solid #fff;
+    border: 1px solid #0869d9;
     transition: all 0.3s ease-out;
   }
 
@@ -160,6 +160,27 @@
   .nav-links-mobile:hover {
     background: #fff;
     color: #242424;
+    transition: 250ms;
+  }
+
+  .nav-links-mobile-login {
+    display: block;
+    text-align: center;
+    margin: 2rem auto;
+    border-radius: 4px;
+    width: 80%;
+    text-decoration: none;
+    font-size: 1.5rem;
+    background-color: transparent;
+    color: #fff;
+    padding: 14px 20px;
+    border: 1px solid #fff;
+    transition: all 0.3s ease-out;
+  }
+
+  .nav-links-mobile-login:hover {
+    background: #006fc4;
+    color: #ffffff;
     transition: 250ms;
   }
 
