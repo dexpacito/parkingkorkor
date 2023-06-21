@@ -11,22 +11,12 @@ const SearchSection = () => {
   };
 
   const searchCarparks = async () => {
-    let config = {
-      method: 'get',
-      maxBodyLength: Infinity,
-      url: 'http://datamall2.mytransport.sg/ltaodataservice/CarParkAvailabilityv2',
-      headers: { 
-        'AccountKey': 'cy5dOtxoSLa65+OR1ZRZwA=='
-      }
-    };
-    
-    axios.request(config)
-    .then((response) => {
-      console.log(JSON.stringify(response.data));
-    })
-    .catch((error) => {
-      console.error("Error in fetching carpark data!");
-    });
+    try {
+      const response = await axios.get(`/api/search`);
+      setSearchResults(response.data);
+    } catch (error) {
+      console.error("Error in fetching carpark data!", error);
+    }
   };
 
   return (
