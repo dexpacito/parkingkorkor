@@ -27,7 +27,7 @@ const SearchSection = () => {
         <Flex direction="row">
           <Input
             type="text"
-            placeholder="Destination"
+            placeholder="Search"
             value={searchTerm}
             onChange={handleChange}
             size="lg"
