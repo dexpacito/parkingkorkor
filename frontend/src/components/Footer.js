@@ -14,15 +14,7 @@ function Footer() {
           Park Smarter, Not Harder
         </p>
         <div className="input-areas">
-          <form>
-            <input
-              className="footer-input"
-              name="email"
-              type="email"
-              placeholder="Your Email"
-            />
-            <Button buttonStyle="btn--outline">Sign Up</Button>
-          </form>
+            <Button buttonStyle="btn--outline">Sign Up Today</Button>
         </div>
       </section>
       <section class="social-media">

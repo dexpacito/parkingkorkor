@@ -5,7 +5,7 @@ import "../../App.css";
 import { auth, db, logout } from "./firebase";
 import { query, collection, getDocs, where } from "firebase/firestore";
 function Dashboard() {
-  const [user, loading, error] = useAuthState(auth);
+  const [user, loading] = useAuthState(auth);
   const [name, setName] = useState("");
   const navigate = useNavigate();
   const fetchUserName = async () => {
@@ -23,7 +23,7 @@ function Dashboard() {
     if (loading) return;
     if (!user) return navigate("/");
     fetchUserName();
-  }, [user, loading]);
+  }, [user, loading, navigate]);
   return (
     <div className="dashboard">
        <div className="dashboard__container">
