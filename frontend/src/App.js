@@ -9,12 +9,15 @@ import SignUp from "./components/pages/SignUp";
 import Login from "./components/pages/Login";
 import Reset from "./components/pages/Reset";
 import Dashboard from "./components/pages/Dashboard";
+import { ChakraProvider } from '@chakra-ui/react'
+
 
 
 
 function App() {
   return (
     <>
+    <ChakraProvider>
       <Router>
         <Navbar />
         <Routes>
@@ -27,6 +30,7 @@ function App() {
           <Route exact path="/dashboard" element={<Dashboard />} />
         </Routes>
       </Router>
+      </ChakraProvider>
     </>
   );
 }

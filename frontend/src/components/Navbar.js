@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { Button } from "./Button";
 import { auth } from "./pages/firebase";
 import "./Navbar.css";
@@ -8,7 +8,6 @@ function Navbar() {
   const [click, setClick] = useState(false);
   const [button, setButton] = useState(true);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const location = useLocation();
 
   const handleClick = () => setClick(!click);
   const closeMobileMenu = () => setClick(false);
@@ -27,11 +26,6 @@ function Navbar() {
 
   window.addEventListener("resize", showButton);
 
-  const handleLoginLogout = () => {
-    if (isLoggedIn) {
-      window.location.href = "/login";
-    }
-  };
 
   useEffect(() => {
     auth.onAuthStateChanged((user) => {

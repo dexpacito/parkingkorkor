@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import axios from "axios";
 import SearchResults from "./SearchResults";
+import { Input, Button, Flex } from "@chakra-ui/react";
+import "./SearchSection.css";
 
 const SearchSection = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -20,15 +22,23 @@ const SearchSection = () => {
   };
 
   return (
-    <div>
-      <input
-        type="text"
-        placeholder="Search"
-        value={searchTerm}
-        onChange={handleChange}
-      />
-      <button onClick={searchCarparks}>Search</button>
-      <SearchResults carparkLocations={searchResults} />
+    <div className="search-section-container">
+      <Flex direction="column" alignItems="center">
+        <Flex direction="row">
+          <Input
+            type="text"
+            placeholder="Destination"
+            value={searchTerm}
+            onChange={handleChange}
+            size="lg"
+            mr={2}
+          />
+          <Button onClick={searchCarparks} colorScheme="blue" size="md">
+            Search
+          </Button>
+        </Flex>
+        <SearchResults carparkLocations={searchResults} />
+      </Flex>
     </div>
   );
 };
