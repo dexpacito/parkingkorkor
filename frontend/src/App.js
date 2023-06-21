@@ -10,20 +10,24 @@ import Login from "./components/pages/Login";
 import Reset from "./components/pages/Reset";
 import Dashboard from "./components/pages/Dashboard";
 
+
+
 function App() {
   return (
-    <Router basename={process.env.PUBLIC_URL}>
-      <Navbar />
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/services" element={<Services />} />
-        <Route path="/products" element={<Products />} />
-        <Route path="/sign-up" element={<SignUp />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/reset" element={<Reset />} />
-        <Route path="/dashboard" element={<Dashboard />} />
-      </Routes>
-    </Router>
+    <>
+      <Router>
+        <Navbar />
+        <Routes>
+          <Route path="/" exact Component={Home} />
+          <Route path="/services" exact Component={Services} />
+          <Route path="/products" exact Component={Products} />
+          <Route path="/sign-up" exact Component={SignUp} />
+          <Route path="/login" exact Component={Login} />
+          <Route exact path="/reset" element={<Reset />} />
+          <Route exact path="/dashboard" element={<Dashboard />} />
+        </Routes>
+      </Router>
+    </>
   );
 }
 
