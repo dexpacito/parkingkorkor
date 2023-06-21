@@ -1,12 +1,14 @@
-import React, { useState,useEffect } from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Link, useLocation } from "react-router-dom";
 import { Button } from "./Button";
+import { auth } from "./pages/firebase";
 import "./Navbar.css";
-
 
 function Navbar() {
   const [click, setClick] = useState(false);
   const [button, setButton] = useState(true);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const location = useLocation();
 
   const handleClick = () => setClick(!click);
   const closeMobileMenu = () => setClick(false);
@@ -19,18 +21,30 @@ function Navbar() {
     }
   };
 
-  useEffect(()=>{
+  useEffect(() => {
     showButton();
-    },[]);
+  }, []);
 
   window.addEventListener("resize", showButton);
+
+  const handleLoginLogout = () => {
+    if (isLoggedIn) {
+      window.location.href = "/login";
+    }
+  };
+
+  useEffect(() => {
+    auth.onAuthStateChanged((user) => {
+      setIsLoggedIn(!!user);
+    });
+  }, []);
 
   return (
     <>
       <nav className="navbar">
         <div className="navbar-container">
           <Link to="/" className="navbar-logo" onClick={closeMobileMenu}>
-          parkingkorkor <i class="fa-solid fa-square-parking"></i>
+            parkingkorkor <i className="fa-solid fa-square-parking"></i>
           </Link>
           <div className="menu-icon" onClick={handleClick}>
             <i className={click ? "fas fa-times" : "fas fa-bars"} />
@@ -61,25 +75,28 @@ function Navbar() {
             </li>
             <li className="nav-item">
               <Link
-                to="/login"
+                to={isLoggedIn ? "/dashboard" : "/login"}
                 className="nav-links"
                 onClick={closeMobileMenu}
               >
-                Login
+                {isLoggedIn ? "Account" : "Login"}
               </Link>
             </li>
-            <li className="nav-item">
-              <Link
-                to="/sign-up"
-                className="nav-links-mobile"
-                onClick={closeMobileMenu}
-              >
-                Sign Up
-              </Link>
-            </li>
+            {!isLoggedIn && (
+              <li className="nav-item">
+                <Link
+                  to="/sign-up"
+                  className="nav-links-mobile"
+                  onClick={closeMobileMenu}
+                >
+                  Sign Up
+                </Link>
+              </li>
+            )}
           </ul>
-          {button && <Button buttonStyle="btn--primary">SIGN UP</Button>}
-          
+          {button && !isLoggedIn && (
+            <Button buttonStyle="btn--primary">SIGN UP</Button>
+          )}
         </div>
       </nav>
     </>
