@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import axios from "axios";
-import { Input, Button, Flex } from "@chakra-ui/react";
+import { Input, Flex } from "@chakra-ui/react";
 import SearchResults from "../SearchResults";
 import SearchSection from "../SearchSection";
 
@@ -23,8 +23,8 @@ function Map() {
     script.onload = () => {
       // Initialize the map
       mapInstance.current = new window.google.maps.Map(mapRef.current, {
-        center: { lat: 1.3521, lng: 103.8198 }, // Set the initial center of the map
-        zoom: 12, // Set the initial zoom level
+        center: { lat: 1.3521, lng: 103.8198 },
+        zoom: 12,
       });
 
       // Create the marker
@@ -65,15 +65,6 @@ function Map() {
     setSearchTerm(event.target.value);
   };
 
-  const searchCarparks = async () => {
-    try {
-      const response = await axios.get(`/api/search?place=${searchTerm}`);
-      setSearchResults(response.data);
-    } catch (error) {
-      console.error("Error in fetching carpark data!", error);
-    }
-  };
-
   const performSearch = async (placeName) => {
     try {
       const response = await axios.get(`/api/search?place=${placeName}`);
@@ -81,10 +72,6 @@ function Map() {
     } catch (error) {
       console.error("Error in fetching carpark data!", error);
     }
-  };
-
-  const handleSearch = (results) => {
-    setSearchResults(results);
   };
 
   return (
@@ -99,13 +86,8 @@ function Map() {
           size="lg"
           mr={2}
         />
-        <Button onClick={searchCarparks} colorScheme="blue" size="md">
-          Search
-        </Button>
       </Flex>
       <div ref={mapRef} style={{ width: "100%", height: "1000px" }}></div>
-      <SearchResults carparkLocations={searchResults} />
-      <SearchSection onSearch={handleSearch} />
     </>
   );
 }
