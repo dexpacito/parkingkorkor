@@ -142,3 +142,24 @@
 .dashboard div {
   margin-top: 7px;
 }
+
+.Home-text {
+  font-size: 20px;
+}
+
+.Home-heading {
+  margin-top: 24px;
+  font-size: 24px;
+}
+
+.Home-text,
+.Home-heading {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+
+
+  color: #5a5a5b;
+}
