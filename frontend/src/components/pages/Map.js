@@ -6,36 +6,391 @@ function Map() {
   const mapRef = useRef(null);
   const inputRef = useRef(null);
   const mapInstance = useRef(null);
-  const markersRef = useRef([]); // Reference to store all marker instances
+  const markersRef = useRef([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [searchResults, setSearchResults] = useState([]);
   const [searchedLocation, setSearchedLocation] = useState(null);
-  const infoWindowRef = useRef(null); // Reference to the currently open infowindow
+  const infoWindowRef = useRef(null);
 
   useEffect(() => {
-    // Load the Google Maps JavaScript API
     const script = document.createElement("script");
     script.src = `https://maps.googleapis.com/maps/api/js?key=AIzaSyDH879TAZA0FWChK3UJDcx3A5jxQI1XqxI&libraries=places`;
     script.async = true;
     script.defer = true;
-    document.body.appendChild(script);
 
     script.onload = () => {
-      // Initialize the map
       mapInstance.current = new window.google.maps.Map(mapRef.current, {
         center: { lat: 1.3521, lng: 103.8198 },
         zoom: 12,
+        styles: [
+          {
+            featureType: "all",
+            elementType: "all",
+            stylers: [
+              {
+                visibility: "on",
+              },
+            ],
+          },
+          {
+            featureType: "administrative",
+            elementType: "labels.text.fill",
+            stylers: [
+              {
+                color: "#444444",
+              },
+            ],
+          },
+          {
+            featureType: "administrative.province",
+            elementType: "all",
+            stylers: [
+              {
+                visibility: "off",
+              },
+            ],
+          },
+          {
+            featureType: "administrative.locality",
+            elementType: "all",
+            stylers: [
+              {
+                visibility: "off",
+              },
+            ],
+          },
+          {
+            featureType: "administrative.neighborhood",
+            elementType: "all",
+            stylers: [
+              {
+                visibility: "off",
+              },
+            ],
+          },
+          {
+            featureType: "administrative.land_parcel",
+            elementType: "all",
+            stylers: [
+              {
+                visibility: "off",
+              },
+            ],
+          },
+          {
+            featureType: "administrative.land_parcel",
+            elementType: "labels.text",
+            stylers: [
+              {
+                visibility: "off",
+              },
+            ],
+          },
+          {
+            featureType: "landscape",
+            elementType: "all",
+            stylers: [
+              {
+                color: "#f2f2f2",
+              },
+            ],
+          },
+          {
+            featureType: "landscape.man_made",
+            elementType: "all",
+            stylers: [
+              {
+                visibility: "simplified",
+              },
+            ],
+          },
+          {
+            featureType: "poi",
+            elementType: "all",
+            stylers: [
+              {
+                visibility: "off",
+              },
+              {
+                color: "#cee9de",
+              },
+              {
+                saturation: "2",
+              },
+              {
+                weight: "0.80",
+              },
+            ],
+          },
+          {
+            featureType: "poi.attraction",
+            elementType: "geometry.fill",
+            stylers: [
+              {
+                visibility: "off",
+              },
+            ],
+          },
+          {
+            featureType: "poi.park",
+            elementType: "all",
+            stylers: [
+              {
+                visibility: "on",
+              },
+            ],
+          },
+          {
+            featureType: "road",
+            elementType: "all",
+            stylers: [
+              {
+                saturation: -100,
+              },
+              {
+                lightness: 45,
+              },
+            ],
+          },
+          {
+            featureType: "road.highway",
+            elementType: "all",
+            stylers: [
+              {
+                visibility: "simplified",
+              },
+            ],
+          },
+          {
+            featureType: "road.highway",
+            elementType: "geometry.fill",
+            stylers: [
+              {
+                visibility: "on",
+              },
+              {
+                color: "#f5d6d6",
+              },
+            ],
+          },
+          {
+            featureType: "road.highway",
+            elementType: "labels.text",
+            stylers: [
+              {
+                visibility: "off",
+              },
+            ],
+          },
+          {
+            featureType: "road.highway",
+            elementType: "labels.icon",
+            stylers: [
+              {
+                hue: "#ff0000",
+              },
+              {
+                visibility: "on",
+              },
+            ],
+          },
+          {
+            featureType: "road.highway.controlled_access",
+            elementType: "labels.text",
+            stylers: [
+              {
+                visibility: "simplified",
+              },
+            ],
+          },
+          {
+            featureType: "road.highway.controlled_access",
+            elementType: "labels.icon",
+            stylers: [
+              {
+                visibility: "on",
+              },
+              {
+                hue: "#0064ff",
+              },
+              {
+                gamma: "1.44",
+              },
+              {
+                lightness: "-3",
+              },
+              {
+                weight: "1.69",
+              },
+            ],
+          },
+          {
+            featureType: "road.arterial",
+            elementType: "all",
+            stylers: [
+              {
+                visibility: "on",
+              },
+            ],
+          },
+          {
+            featureType: "road.arterial",
+            elementType: "labels.text",
+            stylers: [
+              {
+                visibility: "off",
+              },
+            ],
+          },
+          {
+            featureType: "road.arterial",
+            elementType: "labels.icon",
+            stylers: [
+              {
+                visibility: "off",
+              },
+            ],
+          },
+          {
+            featureType: "road.local",
+            elementType: "all",
+            stylers: [
+              {
+                visibility: "on",
+              },
+            ],
+          },
+          {
+            featureType: "road.local",
+            elementType: "labels.text",
+            stylers: [
+              {
+                visibility: "simplified",
+              },
+              {
+                weight: "0.31",
+              },
+              {
+                gamma: "1.43",
+              },
+              {
+                lightness: "-5",
+              },
+              {
+                saturation: "-22",
+              },
+            ],
+          },
+          {
+            featureType: "transit",
+            elementType: "all",
+            stylers: [
+              {
+                visibility: "off",
+              },
+            ],
+          },
+          {
+            featureType: "transit.line",
+            elementType: "all",
+            stylers: [
+              {
+                visibility: "on",
+              },
+              {
+                hue: "#ff0000",
+              },
+            ],
+          },
+          {
+            featureType: "transit.station.airport",
+            elementType: "all",
+            stylers: [
+              {
+                visibility: "simplified",
+              },
+              {
+                hue: "#ff0045",
+              },
+            ],
+          },
+          {
+            featureType: "transit.station.bus",
+            elementType: "all",
+            stylers: [
+              {
+                visibility: "on",
+              },
+              {
+                hue: "#00d1ff",
+              },
+            ],
+          },
+          {
+            featureType: "transit.station.bus",
+            elementType: "labels.text",
+            stylers: [
+              {
+                visibility: "simplified",
+              },
+            ],
+          },
+          {
+            featureType: "transit.station.rail",
+            elementType: "all",
+            stylers: [
+              {
+                visibility: "simplified",
+              },
+              {
+                hue: "#00cbff",
+              },
+            ],
+          },
+          {
+            featureType: "transit.station.rail",
+            elementType: "labels.text",
+            stylers: [
+              {
+                visibility: "simplified",
+              },
+            ],
+          },
+          {
+            featureType: "water",
+            elementType: "all",
+            stylers: [
+              {
+                color: "#46bcec",
+              },
+              {
+                visibility: "on",
+              },
+            ],
+          },
+          {
+            featureType: "water",
+            elementType: "geometry.fill",
+            stylers: [
+              {
+                weight: "1.61",
+              },
+              {
+                color: "#cde2e5",
+              },
+              {
+                visibility: "on",
+              },
+            ],
+          },
+        ],
       });
 
-      // Create the autocomplete instance
       const autocomplete = new window.google.maps.places.Autocomplete(
         inputRef.current
       );
-
-      // Set the bounds to restrict the autocomplete results
       autocomplete.bindTo("bounds", mapInstance.current);
 
-      // Listen for the 'place_changed' event to get the selected place
       autocomplete.addListener("place_changed", () => {
         const place = autocomplete.getPlace();
 
@@ -44,27 +399,28 @@ function Map() {
           return;
         }
 
-        // Update the map's center to the selected place's coordinates
         mapInstance.current.setCenter(place.geometry.location);
         mapInstance.current.setZoom(16);
 
-        // Set the searched location
         setSearchedLocation(place.geometry.location);
 
-        // Perform search based on the selected place
         performSearch(place.name);
       });
+    };
+
+    document.body.appendChild(script);
+
+    return () => {
+      document.body.removeChild(script);
     };
   }, []);
 
   useEffect(() => {
-    // Clear existing markers
     markersRef.current.forEach((marker) => {
       marker.setMap(null);
     });
     markersRef.current = [];
 
-    // Create new markers based on searchResults
     searchResults.forEach((result) => {
       const marker = new window.google.maps.Marker({
         position: {
@@ -76,9 +432,7 @@ function Map() {
         label: result.availableLots.toString(),
       });
 
-      // Add event listener for marker click
       marker.addListener("click", () => {
-        // Close the previous infowindow if it exists
         if (infoWindowRef.current) {
           infoWindowRef.current.close();
         }
@@ -88,29 +442,24 @@ function Map() {
         });
         infowindow.open(mapInstance.current, marker);
 
-        // Update the infoWindowRef with the new infowindow
         infoWindowRef.current = infowindow;
       });
 
-      // Add the marker to the markersRef
       markersRef.current.push(marker);
     });
 
-    // Create a marker for the searched location
     if (searchedLocation) {
       const searchMarker = new window.google.maps.Marker({
         position: searchedLocation,
         map: mapInstance.current,
         title: "Searched Location",
         icon: {
-          url: "https://cdn-icons-png.flaticon.com/512/4451/4451008.png", // Custom marker icon URL
-          scaledSize: new window.google.maps.Size(45, 45), // Specify the desired size of the marker icon
+          url: "https://cdn-icons-png.flaticon.com/512/4451/4451008.png",
+          scaledSize: new window.google.maps.Size(45, 45),
         },
       });
 
-      // Add event listener for marker click
       searchMarker.addListener("click", () => {
-        // Close the previous infowindow if it exists
         if (infoWindowRef.current) {
           infoWindowRef.current.close();
         }
@@ -120,11 +469,9 @@ function Map() {
         });
         infowindow.open(mapInstance.current, searchMarker);
 
-        // Update the infoWindowRef with the new infowindow
         infoWindowRef.current = infowindow;
       });
 
-      // Add the search marker to the markersRef
       markersRef.current.push(searchMarker);
     }
   }, [searchResults, searchedLocation]);
@@ -142,7 +489,6 @@ function Map() {
         availableLots: carpark.AvailableLots,
       }));
 
-      // Filter the carparks based on the map bounds
       const filteredData = processedData.filter((carpark) => {
         const [lat, lng] = carpark.location.split(" ").map(parseFloat);
         const carparkPosition = new window.google.maps.LatLng(lat, lng);
@@ -156,8 +502,8 @@ function Map() {
   };
 
   return (
-    <Flex direction="column" align="center" mt={50}> {/* Center the search bar vertically and add top margin */}
-      <Box mb={50}> {/* Add bottom margin to create space between the map and the search bar */}
+    <Flex direction="column" align="center" mt={50}>
+      <Box mb={50}>
         <Input
           ref={inputRef}
           type="text"
@@ -165,12 +511,12 @@ function Map() {
           value={searchTerm}
           onChange={handleChange}
           size="lg"
+          className="search-button"
         />
       </Box>
       <div ref={mapRef} style={{ width: "100%", height: "1000px" }}></div>
     </Flex>
   );
 }
-
 
 export default Map;

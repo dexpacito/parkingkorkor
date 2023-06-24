@@ -5,10 +5,10 @@ import Map from "./Map";
 
 function Home() {
   return (
-    <>
-      <Map /> {/* Add the Map component */}
+    <div className="home-container">
+      <Map />
       <Footer />
-    </>
+    </div>
   );
 }
 
