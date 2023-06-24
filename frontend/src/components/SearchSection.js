@@ -1,12 +1,13 @@
 import React, { useState } from "react";
 import axios from "axios";
 import SearchResults from "./SearchResults";
-import { Input, Button, Flex } from "@chakra-ui/react";
+import { Input, Button, Flex, Text } from "@chakra-ui/react";
 import "./SearchSection.css";
 
 const SearchSection = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [searchResults, setSearchResults] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (event) => {
     setSearchTerm(event.target.value);
@@ -14,10 +15,13 @@ const SearchSection = () => {
 
   const searchCarparks = async () => {
     try {
-      const response = await axios.get(`/api/search`);
-      setSearchResults(response.data);
+      setLoading(true);
+      const response = await axios.get(`http://localhost:3000/api/search`)
+      .then(res => {setSearchResults(response.data)});
     } catch (error) {
       console.error("Error in fetching carpark data!", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -37,7 +41,13 @@ const SearchSection = () => {
             Search
           </Button>
         </Flex>
-        <SearchResults carparkLocations={searchResults} />
+        {loading ? (
+          <Text mt={4} fontSize="lg">
+            Getting Data...
+          </Text>
+        ) : (
+          <SearchResults carparkLocations={searchResults} />
+        )}
       </Flex>
     </div>
   );
