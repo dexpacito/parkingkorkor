@@ -502,12 +502,12 @@ function Map() {
   };
 
   return (
-    <Flex direction="column" align="center" mt={50}>
+    <Flex direction="column" align="center" mt={4}>
       <Box mb={50}>
         <Input
           ref={inputRef}
           type="text"
-          placeholder="Search"
+          placeholder="Where are we going?"
           value={searchTerm}
           onChange={handleChange}
           size="lg"
