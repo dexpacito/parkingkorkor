@@ -1,8 +1,9 @@
 {
-    "functions": {
-      "server.js": {
-        "runtime": "@vercel/node@1.9.0"
-      }
-    }
-  }
-  
+    "version": "1.7",
+    "builds": [
+        { "src": "*.js", "use": "@vercel/node"}
+    ],
+    "routes": [
+        { "src": "/(.*)", "dest": "/" }
+    ]
+}  
