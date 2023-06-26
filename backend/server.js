@@ -3,14 +3,14 @@ const axios = require('axios');
 const cors = require('cors');
 
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 8080;
 
 app.use(cors()); // Allow cross-origin requests
 
 app.get('/api/search', async (req, res) => {
   let config = {
     method: 'get',
-    maxBodyLength: Infinity,
+    maxContentLength: Infinity,
     url: 'http://datamall2.mytransport.sg/ltaodataservice/CarParkAvailabilityv2',
     headers: {
       'AccountKey': 'cy5dOtxoSLa65+OR1ZRZwA=='

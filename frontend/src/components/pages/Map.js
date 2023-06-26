@@ -482,7 +482,7 @@ function Map() {
 
   const performSearch = async (placeName) => {
     try {
-      const response = await axios.get("http://localhost:3000/api/search");
+      const response = await axios.get("https://parkingkorkor-390513.et.r.appspot.com/api/search");
       const processedData = response.data.value.map((carpark) => ({
         location: carpark.Location,
         development: carpark.Development,
