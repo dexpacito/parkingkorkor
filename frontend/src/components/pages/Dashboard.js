@@ -28,7 +28,9 @@ function Dashboard() {
     if (loading) return;
     if (!user) return navigate("/");
     fetchUserName();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user, loading, navigate]);
+  
   return (
     <div className="dashboard">
       <div className="dashboard__container">
@@ -41,5 +43,6 @@ function Dashboard() {
       </div>
     </div>
   );
+  
 }
 export default Dashboard;
