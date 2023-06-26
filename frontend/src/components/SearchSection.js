@@ -16,7 +16,7 @@ const SearchSection = () => {
   const searchCarparks = async () => {
     try {
       setLoading(true);
-      const response = await axios.get(`http://localhost:3000/api/search`)
+      const response = await axios.get(`https://parkingkorkor-backend-h8n19on98-dexpacito.vercel.app/api/search`)
       .then(res => {setSearchResults(response.data)});
     } catch (error) {
       console.error("Error in fetching carpark data!", error);
