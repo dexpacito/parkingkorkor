@@ -1,26 +1,32 @@
 const express = require('express');
 const axios = require('axios');
 const cors = require('cors');
-const { createServer } = require('@vercel/node');
 
 const app = express();
-const port = 3000;
+const port = 8080;
 
 app.use(cors()); // Allow cross-origin requests
 
 app.get('/api/search', async (req, res) => {
   let config = {
     method: 'get',
-    maxBodyLength: Infinity,
-    url: 'http://datamall2.mytransport.sg/ltaodataservice/CarParkAvailabilityv2',
+    maxContentLength: Infinity,
     headers: {
       'AccountKey': 'cy5dOtxoSLa65+OR1ZRZwA=='
     }
   };
 
+  let consolidatedData = []; // Array to store the consolidated data
+
   try {
-    const response = await axios.request(config);
-    res.json(response.data);
+    // Make API requests with different skip values
+    for (let skip = 0; skip <= 2000; skip += 500) {
+      config.url = `http://datamall2.mytransport.sg/ltaodataservice/CarParkAvailabilityv2?$skip=${skip}`;
+      const response = await axios.request(config);
+      consolidatedData = consolidatedData.concat(response.data.value);
+    }
+
+    res.json(consolidatedData);
   } catch (error) {
     console.error(error);
     res.status(500).send('Error fetching data');

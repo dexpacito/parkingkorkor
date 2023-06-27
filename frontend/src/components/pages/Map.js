@@ -11,6 +11,7 @@ function Map() {
   const [searchResults, setSearchResults] = useState([]);
   const [searchedLocation, setSearchedLocation] = useState(null);
   const infoWindowRef = useRef(null);
+  
 
   useEffect(() => {
     const script = document.createElement("script");
@@ -400,7 +401,7 @@ function Map() {
         }
 
         mapInstance.current.setCenter(place.geometry.location);
-        mapInstance.current.setZoom(16);
+        mapInstance.current.setZoom(17);
 
         setSearchedLocation(place.geometry.location);
 
@@ -488,6 +489,7 @@ function Map() {
         development: carpark.Development,
         availableLots: carpark.AvailableLots,
       }));
+      console.log("Processed data:", processedData);
 
       const filteredData = processedData.filter((carpark) => {
         const [lat, lng] = carpark.location.split(" ").map(parseFloat);
