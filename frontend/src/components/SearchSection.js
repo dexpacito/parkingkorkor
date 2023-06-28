@@ -16,10 +16,10 @@ const SearchSection = () => {
   const searchCarparks = async () => {
     try {
       setLoading(true);
-      const response = await axios.get(`https://parkingkorkor-backend-h8n19on98-dexpacito.vercel.app/api/search`)
+      const response = await axios.get(`https://parkingkorkor-390513.et.r.appspot.com/api/search`)
       .then(res => {setSearchResults(response.data)});
     } catch (error) {
-      console.error("Error in fetching carpark data!", error);
+      console.error("Error in fetching carpark data!!", error);
     } finally {
       setLoading(false);
     }
