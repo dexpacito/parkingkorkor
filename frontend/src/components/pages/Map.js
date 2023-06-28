@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import axios from "axios";
-import { Input, Flex, Box } from "@chakra-ui/react";
+import { Input, Flex, Box, Button } from "@chakra-ui/react";
 
 function Map() {
   const mapRef = useRef(null);
@@ -11,7 +11,7 @@ function Map() {
   const [searchResults, setSearchResults] = useState([]);
   const [searchedLocation, setSearchedLocation] = useState(null);
   const infoWindowRef = useRef(null);
-  
+  const [currentLocation, setCurrentLocation] = useState(null);
 
   useEffect(() => {
     const script = document.createElement("script");
@@ -483,7 +483,9 @@ function Map() {
 
   const performSearch = async (placeName) => {
     try {
-      const response = await axios.get("https://parkingkorkor-390513.et.r.appspot.com/api/search");
+      const response = await axios.get(
+        "https://parkingkorkor-390513.et.r.appspot.com/api/search"
+      );
       const processedData = response.data.map((carpark) => ({
         location: carpark.Location,
         development: carpark.Development,
@@ -503,9 +505,50 @@ function Map() {
     }
   };
 
+  const currentLocationMarker = useRef(null);
+
+  const handleGetCurrentLocation = () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const { latitude, longitude } = position.coords;
+          const currentLocation = { lat: latitude, lng: longitude };
+          setCurrentLocation(currentLocation);
+          mapInstance.current.setCenter(currentLocation);
+          mapInstance.current.setZoom(17);
+
+          if (currentLocationMarker.current) {
+            // Update the position of the existing current location marker
+            currentLocationMarker.current.setPosition(currentLocation);
+          } else {
+            // Create a new current location marker
+            currentLocationMarker.current = new window.google.maps.Marker({
+              position: currentLocation,
+              map: mapInstance.current,
+              title: "Current Location",
+              icon: {
+                url: "https://cdn-icons-png.flaticon.com/512/4451/4451008.png",
+                scaledSize: new window.google.maps.Size(45, 45),
+              },
+            });
+          }
+
+          markersRef.current.push(currentLocationMarker.current);
+
+          performSearch("");
+        },
+        (error) => {
+          console.error("Error getting current location:", error);
+        }
+      );
+    } else {
+      console.error("Geolocation is not supported by this browser.");
+    }
+  };
+
   return (
     <Flex direction="column" align="center" mt={4}>
-      <Box mb={50}>
+      <Box mb={2}>
         <Input
           ref={inputRef}
           type="text"
@@ -516,6 +559,9 @@ function Map() {
           className="search-button"
         />
       </Box>
+      <Button onClick={handleGetCurrentLocation} colorScheme="teal" mb={4}>
+        Use My Current Location
+      </Button>
       <div ref={mapRef} style={{ width: "100%", height: "1000px" }}></div>
     </Flex>
   );
