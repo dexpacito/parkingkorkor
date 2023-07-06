@@ -439,7 +439,10 @@ function Map() {
         }
 
         const infowindow = new window.google.maps.InfoWindow({
-          content: `<div>${result.development}</div><div>Available Lots: ${result.availableLots}</div><div><a href="https://www.google.com/maps/search/?api=1&query=${result.location}">Open in Google Maps</a></div>`,
+          content: `<div>${result.development}</div>
+          <div>Available Lots: ${result.availableLots}</div>
+          <div>Parking Rates: ${result.parkingRatePerHour}</div>
+          <div><a href="https://www.google.com/maps/search/?api=1&query=${result.location}">Open in Google Maps</a></div>`,
         });
         infowindow.open(mapInstance.current, marker);
 
@@ -484,12 +487,13 @@ function Map() {
   const performSearch = async (placeName) => {
     try {
       const response = await axios.get(
-        "https://parkingkorkor-390513.et.r.appspot.com/api/search"
+        "http://localhost:8080/api/search"
       );
       const processedData = response.data.map((carpark) => ({
         location: carpark.Location,
         development: carpark.Development,
         availableLots: carpark.AvailableLots,
+        parkingRatePerHour: carpark["parking-rate-per-hour"],
       }));
       console.log("Processed data:", processedData);
 
