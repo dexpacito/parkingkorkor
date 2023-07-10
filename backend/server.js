@@ -6,7 +6,7 @@ const { MongoClient } = require('mongodb');
 const app = express();
 const port = 8080;
 
-app.use(cors()); // Allow cross-origin requests
+app.use(cors());
 
 app.get('/api/search', async (req, res) => {
   try {
@@ -20,49 +20,39 @@ app.get('/api/search', async (req, res) => {
     const db = client.db('parkingkorkor'); // Replace 'your-database-name' with your actual database name
     const collection = db.collection('carpark-pricing');
 
-    // Retrieve the existing data from the database
-    const existingData = await collection.find().toArray();
-    console.log('Existing data retrieved from MongoDB');
+    // Fetch the "parking-rate-per-hour" data from the database
+    const parkingRates = await collection.find({}, { projection: { _id: 0, CarParkID: 1, 'parking-rate-per-hour': 1 } }).toArray();
+    console.log('Parking rates retrieved from MongoDB');
 
-    // If the database is empty, fetch data from the API and update the database
-    if (existingData.length > 0) {
-      let config = {
-        method: 'get',
-        maxContentLength: Infinity,
-        headers: {
-          'AccountKey': 'cy5dOtxoSLa65+OR1ZRZwA=='
-        }
-      };
+    const consolidatedData = [];
 
-      const consolidatedData = [];
-
-      // Make API requests with different skip values
-      for (let skip = 0; skip <= 2000; skip += 500) {
-        config.url = `http://datamall2.mytransport.sg/ltaodataservice/CarParkAvailabilityv2?$skip=${skip}`;
-        const response = await axios.request(config);
-        consolidatedData.push(...response.data.value);
-        console.log('Data fetched from API');
+    // Make API requests with different skip values
+    let config = {
+      method: 'get',
+      maxContentLength: Infinity,
+      headers: {
+        'AccountKey': 'cy5dOtxoSLa65+OR1ZRZwA=='
       }
+    };
 
-      // Update the database with the fetched data
-      for (const carpark of consolidatedData) {
-        const filter = { CarParkID: carpark.CarParkID };
-        const update = { $set: carpark };
-        await collection.updateOne(filter, update, { upsert: true });
-      }
-
-      console.log('Data added to MongoDB');
-
-      // Retrieve the updated data from the database
-      const updatedData = await collection.find().toArray();
-      client.close();
-
-      res.json(updatedData);
-    } else {
-      client.close();
-
-      res.json(existingData);
+    for (let skip = 0; skip <= 2000; skip += 500) {
+      config.url = `http://datamall2.mytransport.sg/ltaodataservice/CarParkAvailabilityv2?$skip=${skip}`;
+      const response = await axios.request(config);
+      consolidatedData.push(...response.data.value);
+      console.log('Data fetched from API');
     }
+
+    // Merge the data from API and MongoDB
+    const mergedData = consolidatedData.map(carpark => {
+      const parkingRate = parkingRates.find(rate => rate.CarParkID === carpark.CarParkID);
+      return { ...carpark, 'parking-rate-per-hour': parkingRate ? parkingRate['parking-rate-per-hour'] : null };
+    });
+
+    client.close();
+
+    // Return the merged data as the API response
+    res.json(mergedData);
+    console.log('Data returned to client.')
   } catch (error) {
     console.error(error);
     res.status(500).send('Error fetching data');
