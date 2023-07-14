@@ -6,7 +6,7 @@
 }
 
 .home,
-.sign-up
+.sign-up,
 .login {
   display: flex;
   height: 90vh;
@@ -14,8 +14,6 @@
   justify-content: center;
   font-size: 3rem;
 }
-
-
 
 .register {
   height: 100vh;
@@ -50,7 +48,6 @@
 .register div {
   margin-top: 7px;
 }
-
 
 .reset {
   height: 100vh;
@@ -143,6 +140,16 @@
   margin-top: 7px;
 }
 
+.dashboard__form-group {
+  margin-bottom: 20px;
+}
+
+.dashboard__form-group label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
 .Home-text {
   font-size: 20px;
 }
@@ -159,7 +166,5 @@
   justify-content: center;
   align-items: center;
   text-align: center;
-
-
   color: #5a5a5b;
 }
