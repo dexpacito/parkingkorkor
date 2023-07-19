@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import { Input, Flex, Box, Button } from "@chakra-ui/react";
+import { auth } from "./firebase";
 
 function Map() {
   const mapRef = useRef(null);
@@ -12,6 +13,50 @@ function Map() {
   const [searchedLocation, setSearchedLocation] = useState(null);
   const infoWindowRef = useRef(null);
   const [currentLocation, setCurrentLocation] = useState(null);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [favoriteLocation, setFavoriteLocation] = useState(null);
+
+  const handleAddToFavorites = () => {
+    if (searchedLocation) {
+      setFavoriteLocation(searchedLocation);
+    }
+  };
+
+  const renderFavoriteLocation = () => {
+    if (isLoggedIn) {
+      if (favoriteLocation) {
+        return (
+          <div>
+            <h2>Favorite Location:</h2>
+            <p>Latitude: {favoriteLocation.lat}</p>
+            <p>Longitude: {favoriteLocation.lng}</p>
+          </div>
+        );
+      } else {
+        return <p>No favorite location added.</p>;
+      }
+    }
+  
+    // Only show the "Sign in" message if the user is not logged in
+    return (
+      <p>
+        {isLoggedIn ? null : (
+          <>
+            Sign in to add a favorite location. <a href="/login">Sign In</a>
+          </>
+        )}
+      </p>
+    );
+  };
+
+  useEffect(() => {
+    auth.onAuthStateChanged((user) => {
+      setIsLoggedIn(!!user);
+    });
+  }, []);
+  
+  
+
 
   useEffect(() => {
     const script = document.createElement("script");
@@ -23,368 +68,6 @@ function Map() {
       mapInstance.current = new window.google.maps.Map(mapRef.current, {
         center: { lat: 1.3521, lng: 103.8198 },
         zoom: 12,
-        styles: [
-          {
-            featureType: "all",
-            elementType: "all",
-            stylers: [
-              {
-                visibility: "on",
-              },
-            ],
-          },
-          {
-            featureType: "administrative",
-            elementType: "labels.text.fill",
-            stylers: [
-              {
-                color: "#444444",
-              },
-            ],
-          },
-          {
-            featureType: "administrative.province",
-            elementType: "all",
-            stylers: [
-              {
-                visibility: "off",
-              },
-            ],
-          },
-          {
-            featureType: "administrative.locality",
-            elementType: "all",
-            stylers: [
-              {
-                visibility: "off",
-              },
-            ],
-          },
-          {
-            featureType: "administrative.neighborhood",
-            elementType: "all",
-            stylers: [
-              {
-                visibility: "off",
-              },
-            ],
-          },
-          {
-            featureType: "administrative.land_parcel",
-            elementType: "all",
-            stylers: [
-              {
-                visibility: "off",
-              },
-            ],
-          },
-          {
-            featureType: "administrative.land_parcel",
-            elementType: "labels.text",
-            stylers: [
-              {
-                visibility: "off",
-              },
-            ],
-          },
-          {
-            featureType: "landscape",
-            elementType: "all",
-            stylers: [
-              {
-                color: "#f2f2f2",
-              },
-            ],
-          },
-          {
-            featureType: "landscape.man_made",
-            elementType: "all",
-            stylers: [
-              {
-                visibility: "simplified",
-              },
-            ],
-          },
-          {
-            featureType: "poi",
-            elementType: "all",
-            stylers: [
-              {
-                visibility: "off",
-              },
-              {
-                color: "#cee9de",
-              },
-              {
-                saturation: "2",
-              },
-              {
-                weight: "0.80",
-              },
-            ],
-          },
-          {
-            featureType: "poi.attraction",
-            elementType: "geometry.fill",
-            stylers: [
-              {
-                visibility: "off",
-              },
-            ],
-          },
-          {
-            featureType: "poi.park",
-            elementType: "all",
-            stylers: [
-              {
-                visibility: "on",
-              },
-            ],
-          },
-          {
-            featureType: "road",
-            elementType: "all",
-            stylers: [
-              {
-                saturation: -100,
-              },
-              {
-                lightness: 45,
-              },
-            ],
-          },
-          {
-            featureType: "road.highway",
-            elementType: "all",
-            stylers: [
-              {
-                visibility: "simplified",
-              },
-            ],
-          },
-          {
-            featureType: "road.highway",
-            elementType: "geometry.fill",
-            stylers: [
-              {
-                visibility: "on",
-              },
-              {
-                color: "#f5d6d6",
-              },
-            ],
-          },
-          {
-            featureType: "road.highway",
-            elementType: "labels.text",
-            stylers: [
-              {
-                visibility: "off",
-              },
-            ],
-          },
-          {
-            featureType: "road.highway",
-            elementType: "labels.icon",
-            stylers: [
-              {
-                hue: "#ff0000",
-              },
-              {
-                visibility: "on",
-              },
-            ],
-          },
-          {
-            featureType: "road.highway.controlled_access",
-            elementType: "labels.text",
-            stylers: [
-              {
-                visibility: "simplified",
-              },
-            ],
-          },
-          {
-            featureType: "road.highway.controlled_access",
-            elementType: "labels.icon",
-            stylers: [
-              {
-                visibility: "on",
-              },
-              {
-                hue: "#0064ff",
-              },
-              {
-                gamma: "1.44",
-              },
-              {
-                lightness: "-3",
-              },
-              {
-                weight: "1.69",
-              },
-            ],
-          },
-          {
-            featureType: "road.arterial",
-            elementType: "all",
-            stylers: [
-              {
-                visibility: "on",
-              },
-            ],
-          },
-          {
-            featureType: "road.arterial",
-            elementType: "labels.text",
-            stylers: [
-              {
-                visibility: "off",
-              },
-            ],
-          },
-          {
-            featureType: "road.arterial",
-            elementType: "labels.icon",
-            stylers: [
-              {
-                visibility: "off",
-              },
-            ],
-          },
-          {
-            featureType: "road.local",
-            elementType: "all",
-            stylers: [
-              {
-                visibility: "on",
-              },
-            ],
-          },
-          {
-            featureType: "road.local",
-            elementType: "labels.text",
-            stylers: [
-              {
-                visibility: "simplified",
-              },
-              {
-                weight: "0.31",
-              },
-              {
-                gamma: "1.43",
-              },
-              {
-                lightness: "-5",
-              },
-              {
-                saturation: "-22",
-              },
-            ],
-          },
-          {
-            featureType: "transit",
-            elementType: "all",
-            stylers: [
-              {
-                visibility: "off",
-              },
-            ],
-          },
-          {
-            featureType: "transit.line",
-            elementType: "all",
-            stylers: [
-              {
-                visibility: "on",
-              },
-              {
-                hue: "#ff0000",
-              },
-            ],
-          },
-          {
-            featureType: "transit.station.airport",
-            elementType: "all",
-            stylers: [
-              {
-                visibility: "simplified",
-              },
-              {
-                hue: "#ff0045",
-              },
-            ],
-          },
-          {
-            featureType: "transit.station.bus",
-            elementType: "all",
-            stylers: [
-              {
-                visibility: "on",
-              },
-              {
-                hue: "#00d1ff",
-              },
-            ],
-          },
-          {
-            featureType: "transit.station.bus",
-            elementType: "labels.text",
-            stylers: [
-              {
-                visibility: "simplified",
-              },
-            ],
-          },
-          {
-            featureType: "transit.station.rail",
-            elementType: "all",
-            stylers: [
-              {
-                visibility: "simplified",
-              },
-              {
-                hue: "#00cbff",
-              },
-            ],
-          },
-          {
-            featureType: "transit.station.rail",
-            elementType: "labels.text",
-            stylers: [
-              {
-                visibility: "simplified",
-              },
-            ],
-          },
-          {
-            featureType: "water",
-            elementType: "all",
-            stylers: [
-              {
-                color: "#46bcec",
-              },
-              {
-                visibility: "on",
-              },
-            ],
-          },
-          {
-            featureType: "water",
-            elementType: "geometry.fill",
-            stylers: [
-              {
-                weight: "1.61",
-              },
-              {
-                color: "#cde2e5",
-              },
-              {
-                visibility: "on",
-              },
-            ],
-          },
-        ],
       });
 
       const autocomplete = new window.google.maps.places.Autocomplete(
@@ -552,6 +235,7 @@ function Map() {
 
   return (
     <Flex direction="column" align="center" mt={4}>
+      {/* Existing code */}
       <Box mb={2}>
         <Input
           ref={inputRef}
@@ -563,9 +247,16 @@ function Map() {
           className="search-button"
         />
       </Box>
+      {/* Existing code */}
       <Button onClick={handleGetCurrentLocation} colorScheme="teal" mb={4}>
         Use My Current Location
       </Button>
+      {/* New: Add a "Favorites" button */}
+      <Button onClick={handleAddToFavorites} colorScheme="teal" mb={4}>
+        <i class="fa-solid fa-star"></i> Saved
+      </Button>
+      {/* Conditionally render the favorite location or "Sign in" message */}
+      {renderFavoriteLocation()}
       <div ref={mapRef} style={{ width: "100%", height: "1000px" }}></div>
     </Flex>
   );
