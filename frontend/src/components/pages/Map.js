@@ -15,39 +15,59 @@ function Map() {
   const [currentLocation, setCurrentLocation] = useState(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [favoriteLocation, setFavoriteLocation] = useState(null);
+  const [favorites, setFavorites] = useState([]);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
 
   const handleAddToFavorites = () => {
     if (searchedLocation) {
       setFavoriteLocation(searchedLocation);
+      setFavorites([...favorites, searchedLocation]);
     }
   };
 
-  const renderFavoriteLocation = () => {
-    if (isLoggedIn) {
-      if (favoriteLocation) {
-        return (
-          <div>
-            <h2>Favorite Location:</h2>
-            <p>Latitude: {favoriteLocation.lat}</p>
-            <p>Longitude: {favoriteLocation.lng}</p>
-          </div>
-        );
-      } else {
-        return <p>No favorite location added.</p>;
-      }
-    }
-  
-    // Only show the "Sign in" message if the user is not logged in
-    return (
-      <p>
-        {isLoggedIn ? null : (
-          <>
-            Sign in to add a favorite location. <a href="/login">Sign In</a>
-          </>
-        )}
-      </p>
-    );
+  const handleDropdownToggle = () => {
+    setIsDropdownOpen(!isDropdownOpen);
   };
+
+  const handleFavoriteItemClick = (location) => {
+    setFavoriteLocation(location);
+    setIsDropdownOpen(false);
+  };
+
+const renderFavoriteLocationsDropdown = () => {
+  if (!isDropdownOpen) return null;
+
+  return (
+    <Box mt={2} border="1px solid #ccc" borderRadius="4px" position="absolute" zIndex={1}>
+      {favorites.length > 0 ? (
+        favorites.map((location, index) => (
+          <Box
+            key={index}
+            p={2}
+            cursor="pointer"
+            _hover={{ background: "#f0f0f0" }}
+            onClick={() => handleFavoriteItemClick(location)}
+          >
+            Latitude: {location.lat}, Longitude: {location.lng}
+          </Box>
+        ))
+      ) : (
+        <Box p={2}>
+          No favorite locations added.
+        </Box>
+      )}
+      {/* Show the "Sign in" message if the user is not logged in */}
+      {!isLoggedIn && (
+        <Box p={2}>
+          Sign in to add a favorite location. <a href="/login">Sign In</a>
+        </Box>
+      )}
+    </Box>
+  );
+};
+
+
 
   useEffect(() => {
     auth.onAuthStateChanged((user) => {
@@ -251,15 +271,18 @@ function Map() {
       <Button onClick={handleGetCurrentLocation} colorScheme="teal" mb={4}>
         Use My Current Location
       </Button>
-      {/* New: Add a "Favorites" button */}
-      <Button onClick={handleAddToFavorites} colorScheme="teal" mb={4}>
-        <i class="fa-solid fa-star"></i> Saved
-      </Button>
+      {/* New: Add a "Favorites" button with a dropdown */}
+      <Box position="relative">
+        <Button onClick={handleDropdownToggle} colorScheme="teal" mb={4}>
+          <i className="fa-solid fa-star"></i> Saved
+        </Button>
+        {/* Show favorite locations as a dropdown */}
+        {renderFavoriteLocationsDropdown()}
+      </Box>
       {/* Conditionally render the favorite location or "Sign in" message */}
-      {renderFavoriteLocation()}
       <div ref={mapRef} style={{ width: "100%", height: "1000px" }}></div>
     </Flex>
   );
-}
+  }  
 
 export default Map;
