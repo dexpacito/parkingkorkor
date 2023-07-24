@@ -190,7 +190,7 @@ const renderFavoriteLocationsDropdown = () => {
   const performSearch = async (placeName) => {
     try {
       const response = await axios.get(
-        "http://localhost:8080/api/search"
+        "https://parkingkorkor-390513.et.r.appspot.com/api/search"
       );
       const processedData = response.data.map((carpark) => ({
         location: carpark.Location,
