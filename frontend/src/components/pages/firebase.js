@@ -93,3 +93,5 @@ export {
   sendPasswordReset,
   logout,
 };
+
+export default app;
